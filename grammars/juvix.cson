@@ -1,6 +1,6 @@
 name: 'Juvix'
 scopeName: 'source.juvix'
-filelets: ['ju']
+fileTypes: ['ju']
 patterns:
   [
     {
@@ -13,11 +13,7 @@ patterns:
     }
     {
       name: 'keyword.control.juvix'
-      match: '\\b(where|with|syntax|proof|postulate|using|record|instance|interface|implementation|record|rewrite)\\b'
-    }
-    {
-      name: 'keyword.control.juvix'
-      match:  '\\b(public|private|export|implicit)\\b'
+      match: '\\b(where|with|syntax|proof|postulate|using|record|instance|record)\\b'
     }
     {
       name: 'comment.line.juvix'
@@ -30,12 +26,12 @@ patterns:
       comment: 'Line comment'
     }
     {
-      name: 'storage.let.function.juvix'
+      name: 'storage.type.function.juvix'
       match: '\\?[-!#\\$%&\\*\\+\\.\\/<=>@\\\\\^\|~:]+|[-!#\\$%&\\*\\+\\.\\/<=>@\\\\\^\|~:\\?][-!#\\$%&\\*\\+\\.\\/<=>@\\\\\^\|~:]*'
     }
     {
-      name: 'keyword.let.builtin.juvix'
-      match: '\\b(let|int|nat|integer|float|char|string|bytes|bool|storage)\\b'
+      name: 'keyword.type.builtin.juvix'
+      match: '\\b(int|nat|integer|float|char|string|bytes|bool|storage)\\b'
     }
     {
       name: 'constant.numeric.juvix'
@@ -80,7 +76,7 @@ patterns:
     }
     {
       name: 'variable.other.juvix'
-      match : "(?<!\\w)\\'\\w++(?!')(?!\\-)"
+      match : "\\b([\\p{Ll}][\\p{Lu}\\p{Lt}\\p{Ll}\\p{Lo}\\p{Lm}\\d'\\-_]*)"
     }
     {
       name: 'string.quoted.single.juvix'
@@ -131,7 +127,7 @@ patterns:
         ]
     }
     {
-      begin: '\\b(import\\s+public|import)\\b'
+      begin: '\\b(module\\s+open|module)\\b'
       beginCaptures:
         1:
           name: 'keyword.other.juvix'
@@ -155,7 +151,7 @@ patterns:
           name: 'entity.name.let.juvix'
         3:
           name: 'keyword.operator.colon.juvix'
-      end: '\\b(where)\\b|(=)|$'
+      end: '\\b(end)\\b|(=)|$'
       endCaptures:
         1:
           name: 'keyword.other.juvix'
@@ -223,10 +219,6 @@ repository:
         }
         {
           name: 'meta.context-signature.juvix'
-          comment:
-            """For things like '(Eq a, Show b) =>'
-            It begins with '(' or followed by ') =>' on the same line,
-            or anything but ')' until the end of line."""
           begin: "(\\()((?=.*\\)\\s*=>)|(?=[^)]*$))"
           beginCaptures:
             1:
