@@ -1,362 +1,308 @@
 name: 'Juvix'
 scopeName: 'source.juvix'
 fileTypes: ['ju']
-patterns:
-  [
-    {
-      name: 'keyword.control.juvix'
-      match: '\\b(if|then|else|do|let|in|record|end|sig)\\b'
-    }
-    {
-      name: 'keyword.control.juvix'
-      match: '\\b(case|of|infix|infixl|infixr)\\b'
-    }
-    {
-      name: 'keyword.control.juvix'
-      match: '\\b(where|with|syntax|proof|postulate|using|record|instance|record)\\b'
-    }
-    {
-      name: 'comment.line.juvix'
-      match: '(--).*$\n?'
-      comment: 'Line comment'
-    }
-    {
-      name: 'comment.documentation.line.juvix'
-      match: '(\\|\\|\\|).*$\n?'
-      comment: 'Line comment'
-    }
-    {
-      name: 'storage.type.function.juvix'
-      match: '\\?[-!#\\$%&\\*\\+\\.\\/<=>@\\\\\^\|~:]+|[-!#\\$%&\\*\\+\\.\\/<=>@\\\\\^\|~:\\?][-!#\\$%&\\*\\+\\.\\/<=>@\\\\\^\|~:]*'
-    }
-    {
-      name: 'keyword.type.builtin.juvix'
-      match: '\\b(int|nat|integer|float|char|string|bytes|bool|storage)\\b'
-    }
-    {
-      name: 'constant.numeric.juvix'
-      match: '\\b(S|Z)\\b'
-    }
-    {
-      match: '\\b([0-9]+|0([xX][0-9a-fA-F]+|[oO][0-7]+))\\b'
-      name: 'constant.numeric.juvix'
-      comment: 'integer literal'
-    }
-    {
-      match: '\\b([0-9]+\\.[0-9]+([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+)\\b'
-      name: 'constant.numeric.float.juvix'
-      comment: 'float literal'
-    }
-    {
-      match: '\\(\\)'
-      name: 'constant.unit.juvix'
-    }
-    {
-      name: 'comment.block.juvix'
-      begin: '\\{-'
-      end: '-\\}'
-      comment: 'Block comment'
-    }
-    {
-      name: 'string.quoted.double.juvix'
-      begin: '"'
-      beginCaptures:
-        0:
-          name: 'punctuation.definition.string.begin.juvix'
-      end: '"'
-      endCaptures:
-        0:
-          name: 'punctuation.definition.string.end.juvix'
-      patterns:
-        [
-          {
-            include: '#escape_characters'
-          }
-        ]
-    }
-    {
-      name: 'variable.other.juvix'
-      match : "\\b([\\p{Ll}][\\p{Lu}\\p{Lt}\\p{Ll}\\p{Lo}\\p{Lm}\\d'\\-_]*)"
-    }
-    {
-      name: 'string.quoted.single.juvix'
-      match: "(')(?:(?:\\\\\")|(?:\\\\[0-9]+)|(\\\\o[0-7]+)|(\\\\x[0-9a-fA-F]+)|(?:[^'])|(NUL|SOH|STX|ETX|EOT|ENQ|ACK|BEL|BS|HT|LF|VT|FF|CR|SO|SI|DLE|DC1|DC2|DC3|DC4|NAK|SYN|ETB|CAN|EM|SUB|ESC|FS|GS|RS|US|SP|DEL))(')"
-      captures:
-        1:
-          name: 'punctuation.definition.string.begin.juvix'
-        2:
-          name: 'constant.character.escape.octal.juvix'
-        3:
-          name: 'constant.character.escape.hexadecimal.juvix'
-        4:
-          name: 'constant.character.escape.control.juvix'
-        5:
-          name: 'punctuation.definition.string.end.juvix'
-      patterns:
-        [
-          {
-            name: 'invalid.illegal.juvix'
-            match: "\\\\n"
-          }
-        ]
-    }
-    {
-      name: 'keyword.operator.function.infix.juvix'
-      begin: '`(?![\{|\(])'
-      beginCaptures:
-        0:
-          name: 'punctuation.definition.entity.juvix'
-      end: '`'
-      endCaptures:
-        0:
-          name: 'punctuation.definition.entity.juvix'
-    }
-    {
-      begin: '\\b(mod)\\b'
-      beginCaptures:
-        1:
-          name: 'keyword.control.juvix'
-      end: '($|;|(?=--))'
-      name: 'meta.module.juvix'
-      patterns:
-        [
-          {
-            match: "([a-zA-Z._\\-']+)"
-            name: 'meta.declaration.module.juvix'
-          }
-        ]
-    }
-    {
-      begin: '\\b(module\\s+open|module)\\b'
-      beginCaptures:
-        1:
-          name: 'keyword.other.juvix'
-      end: '($|;|(?=--))'
-      name: 'meta.import.juvix'
-      patterns:
-        [
-          {
-            match: "([a-zA-Z._\\-']+)"
-            name: 'support.other.module.juvix'
-          }
-        ]
-    }
-    {
-      name: 'meta.declaration.data.juvix'
-      begin: "\\b(let)\\s+([\\w']+)\\s*(:)?"
-      beginCaptures:
-        1:
-          name: 'keyword.other.juvix'
-        2:
-          name: 'entity.name.let.juvix'
-        3:
-          name: 'keyword.operator.colon.juvix'
-      end: '\\b(end)\\b|(=)|$'
-      endCaptures:
-        1:
-          name: 'keyword.other.juvix'
-        2:
-          name: 'keyword.operator.juvix'
-      patterns:
-        [
-          include: '#let_signature'
-        ]
-    }
-    {
-      name: 'meta.declaration.data.juvix'
-      begin: "\\b(parameters)\\s+(\\()"
-      end: "(\\))$"
-      beginCaptures:
-        1:
-          name: 'keyword.other.juvix'
-        2:
-          name: 'punctuation.context.begin.juvix'
-      endCaptures:
-        1:
-          name: 'punctuation.context.begin.juvix'
-      patterns:
-        [
-            {
-              name: 'comment.line.juvix'
-              match: '(--).*$\n?'
-            }
-            {
-              name: 'meta.parameter.block.named.juvix'
-              match: "((\\w+)\\s*(:)\\s*(\\w+)\\s*)"
-              captures:
-                2:
-                  name: 'entity.name.tag.juvix'
-                3:
-                  name: 'keyword.operator.colon.juvix'
-            }
-        ]
-    }
-    {
-      include: '#function_signature'
-    }
-    {
-      name: 'keyword.operator.juvix'
-      match: "[|&!%$?~+:\\-.=</>\\\\*]+"
-    }
-    {
-      include: '#data_ctor'
-    }
-  ]
+patterns: [
+	{
+		include: "#comments"
+	}
+	{
+		include: "#modules"
+	}
+	{
+		include: "#options"
+	}
+	{
+		include: "#expr"
+	}
+]
 repository:
-  context_signature:
-    patterns:
-      [
-        {
-          name: 'meta.context-signature.juvix'
-          match: "([\\w._']+)((\\s+[\\w_']+)+)\\s*(=>)"
-          captures:
-            1:
-              name: 'entity.other.inherited-class.juvix'
-            2:
-              name: 'entity.other.attribute-name.juvix'
-            4:
-              name: 'keyword.operator.double-arrow.juvix'
-        }
-        {
-          name: 'meta.context-signature.juvix'
-          begin: "(\\()((?=.*\\)\\s*=>)|(?=[^)]*$))"
-          beginCaptures:
-            1:
-              name: 'punctuation.context.begin.juvix'
-          end: "(\\))\\s*(=>)"
-          endCaptures:
-            1:
-              name: 'punctuation.context.end.juvix'
-            2:
-              name: 'keyword.operator.double-arrow.juvix'
-          patterns:
-            [
-              {
-                name: 'meta.class-constraint.juvix'
-                match: "([\\w']+)\\s+([\\w']+)"
-                captures:
-                  1:
-                    name: 'entity.other.inherited-class.juvix'
-                  2:
-                    name: 'entity.other.attribute-name.juvix'
-              }
-            ]
-        }
-      ]
-  parameter_let:
-    comment: "Parameter lets in a let signature"
-    patterns:
-      [
-        {
-          include: '#prelude_let'
-        }
-        {
-          name: 'meta.parameter.named.juvix'
-          comment: '(x : Nat)'
-          begin: "\\(([\\w']+)\\s*:(?!:)"
-          beginCaptures:
-            1:
-              name: 'entity.name.tag.juvix'
-          end: "\\)"
-          patterns:
-            [
-              {
-                include: '#prelude_let'
-              }
-            ]
-        }
-        {
-          name: 'meta.parameter.implicit.juvix'
-          comment: '{auto p : a = b}'
-          begin: "\\{((auto|default .+)\\s+)?([\\w']+)\\s*:(?!:)"
-          beginCaptures:
-            1:
-              name: 'storage.modifier.juvix'
-            3:
-              name: 'entity.name.tag.juvix'
-          end: '\\}'
-          patterns:
-            [
-              {
-                include: '#prelude_let'
-              }
-            ]
-        }
-      ]
-  let_signature:
-    patterns:
-      [
-        {
-          name: 'keyword.operator.arrow.juvix'
-          match: '->'
-        }
-        {
-          include: '#context_signature'
-        }
-        {
-          include: '#parameter_let'
-        }
-        {
-          include: '#language_const'
-        }
-      ]
-  function_signature:
-    name: 'meta.function.let-signature.juvix'
-    begin: "(([\\w']+)|\\(([|!%$+\\-.,=</>:]+)\\))\\s*(:)(?!:)"
-    beginCaptures:
-      2:
-        name: 'entity.name.function.juvix'
-      3:
-        name: 'entity.name.function.juvix'
-      4:
-        name: 'keyword.operator.colon.juvix'
-    end: "(;|(?=--)|(?<=[^\\s>])\\s*(?!->)\\s*$)"
-    patterns:
-      [
-        {
-          include: '#let_signature'
-        }
-      ]
-    comment: """The end patterm is a bit tricky. It's or ';' or something, at the end of the line,
-      but not '->', because a let signature can be multiline. Though, it doesn't help, if you
-      break the signature before arrows."""
-  language_const:
-    patterns:
-      [
-        {
-          name: 'constant.language.unit.juvix'
-          match: "\\(\\)"
-        }
-        {
-          name: 'constant.language.bottom.juvix'
-          match: "_\\|_"
-        }
-        {
-          name: 'constant.language.underscore.juvix'
-          match: "\\b_\\b"
-        }
-      ]
-  escape_characters:
-    patterns:
-      [
-        {
-          name: 'constant.character.escape.ascii.juvix'
-          match: '\\\\(NUL|SOH|STX|ETX|EOT|ENQ|ACK|BEL|BS|HT|LF|VT|FF|CR|SO|SI|DLE|DC1|DC2|DC3|DC4|NAK|SYN|ETB|CAN|EM|SUB|ESC|FS|GS|RS|US|SP|DEL|[abfnrtv\\\\\\"\'\\&])'
-        }
-        {
-          name: 'constant.character.escape.octal.juvix'
-          match: '\\\\o[0-7]+|\\\\x[0-9A-Fa-f]+|\\\\[0-9]+'
-        }
-        {
-          name: 'constant.character.escape.control.juvix'
-          match: '\\^[A-Z@\\[\\]\\\\\\^_]'
-        }
-      ]
-  data_ctor:
-    patterns:
-      [
-        {
-          'name': 'entity.name.tag.juvix'
-          'match': '\\b[\\p{Lu}\\p{Lt}][\\p{Ll}_\\p{Lu}\\p{Lt}\\p{Nd}\']*(?:\\.[\\p{Lu}\\p{Lt}][\\p{Ll}_\\p{Lu}\\p{Lt}\\p{Nd}\'\\-_]*)*\\b'
-        }
-      ]
+	expr:
+		patterns: [
+			{
+				include: "#comments"
+			}
+			{
+				name: "entity.name.type.juvix"
+				match: "[a-z0-9]\\b"
+			}
+			{
+				include: "#strings"
+			}
+			{
+				match: "(/\\\\|\\\\/|<:|<@|[(][|]|[|][)]|u#|~>|->|<--|<-|<==>|==>|[?][.]|[.]\\[|[.]\\(|[{][:]pattern|:|:=|;|[!][{]|\\[[|]|[|]>|[|]\\]|[~+^&?$|#,.:;=\\[\\-](){}])"
+				name: "support.class.base.juvix"
+			}
+			{
+				match: "\\b(let|let-type|in|type|if|then|else|cond|do|return|where|with|sig|end)\\b"
+				name: "keyword.other.juvix"
+			}
+			{
+				match: "\\b([tT]rue|[fF]alse)\\b"
+				name: "constant.language.boolean.juvix"
+			}
+			{
+				match: "\\b[0-9]+[uU]?[zyslL]?\\b"
+				name: "constant.numeric.decimal.juvix"
+			}
+			{
+				match: "\\%[A-Za-z.]+\\b"
+				name: "variable.other.constant.juvix"
+			}
+			{
+				match: '''
+					(?x)
+					(?:
+					  (?:\\b[0-9]+(\\.)[0-9]+[eE][+-]?[0-9]+\\b)| # 1.1E+3
+					  (?:\\b[0-9]+(\\.)[eE][+-]?[0-9]+\\b)|       # 1.E+3
+					  (?:\\B(\\.)[0-9]+[eE][+-]?[0-9]+\\b)|       # .1E+3
+					  (?:\\b[0-9]+[eE][+-]?[0-9]+\\b)|            # 1E+3
+					  (?:\\b[0-9]+(\\.)[0-9]+\\b)|                # 1.1
+					  (?:\\b[0-9]+(\\.)\\B)|                      # 1.
+					  (?:\\B(\\.)[0-9]+\\b)|                      # .1
+					  (?:\\b[0-9]+\\b(?!\\.))                     # 1
+					)[L]?[fF]?
+				'''
+				captures:
+					"0":
+						name: "constant.numeric.decimal.juvix"
+					"1":
+						name: "meta.delimiter.decimal.period.juvix"
+					"2":
+						name: "meta.delimiter.decimal.period.juvix"
+					"3":
+						name: "meta.delimiter.decimal.period.juvix"
+					"4":
+						name: "meta.delimiter.decimal.period.juvix"
+					"5":
+						name: "meta.delimiter.decimal.period.juvix"
+					"6":
+						name: "meta.delimiter.decimal.period.juvix"
+			}
+			{
+				begin: "([(])"
+				beginCaptures:
+					"1":
+						name: "punctuation.definition.clause.begin.bracket.round.juvix"
+				end: "([)])"
+				endCaptures:
+					"1":
+						name: "punctuation.definition.clause.end.bracket.round.juvix"
+				patterns: [
+					{
+						include: "#expr"
+					}
+				]
+			}
+			{
+				begin: "([%]\\[)"
+				beginCaptures:
+					"1":
+						name: "constant.language.termorder.begin.juvix"
+				end: "(\\])"
+				endCaptures:
+					"1":
+						name: "constant.language.termorder.end.juvix"
+				patterns: [
+					{
+						include: "#expr"
+					}
+				]
+			}
+			{
+				begin: "(\\[[@])"
+				beginCaptures:
+					"1":
+						name: "storage.modifier.attributes.begin.juvix"
+				end: "(\\])"
+				endCaptures:
+					"1":
+						name: "storage.modifier.attributes.end.juvix"
+				patterns: [
+					{
+						include: "#expr"
+					}
+				]
+			}
+			{
+				begin: "\\b(case)\\b"
+				beginCaptures:
+					"1":
+						name: "keyword.control.case.juvix"
+				end: "\\b(of)\\b"
+				endCaptures:
+					"1":
+						name: "keyword.control.of.juvix"
+				patterns: [
+					{
+						include: "#expr"
+					}
+				]
+			}
+			{
+				begin: "\\b(begin)\\b"
+				beginCaptures:
+					"1":
+						name: "keyword.control.begin.juvix"
+				end: "\\b(end)\\b"
+				endCaptures:
+					"1":
+						name: "keyword.control.end.juvix"
+				patterns: [
+					{
+						include: "#expr"
+					}
+				]
+			}
+			{
+				match: "\\b([\\p{Lu}\\p{Lt}][\\p{Lu}\\p{Lt}\\p{Ll}\\p{Lo}\\p{Lm}\\d'\\-_]*)\\b(?!\\s*[.])"
+				captures:
+					"1":
+						name: "support.function.constructor.juvix"
+			}
+			{
+				match: "\\b((?:[\\p{Lu}\\p{Lt}][\\p{Lu}\\p{Lt}\\p{Ll}\\p{Lo}\\p{Lm}\\d'\\-_]*[.])+)"
+				captures:
+					"1":
+						name: "variable.other.module.juvix"
+			}
+			{
+				match: "\\b([\\p{Ll}][\\p{Lu}\\p{Lt}\\p{Ll}\\p{Lo}\\p{Lm}\\d'\\-_]*)"
+				captures:
+					"1":
+						name: "entity.name.function.juvix"
+					"2":
+						name: "entity.name.juvix"
+			}
+		]
+	modules:
+		patterns: [
+			{
+				begin: "\\b(mod)\\s+([\\p{Lu}\\p{Lt}][\\p{Lu}\\p{Lt}\\p{Ll}\\p{Lo}\\p{Lm}\\d'\\-]*)\\s*(=)"
+				beginCaptures:
+					"1":
+						name: "keyword.control.module.juvix"
+					"2":
+						name: "variable.other.module-alias.juvix"
+					"3":
+						name: "keyword.operator.assignment.juvix"
+				end: "\\b((?<name>[\\p{Lu}\\p{Lt}][\\p{Lu}\\p{Lt}\\p{Ll}\\p{Lo}\\p{Lm}\\d'\\-]*)(?:[.]\\g<name>)*)\\b"
+				endCaptures:
+					"1":
+						name: "variable.other.module.juvix"
+			}
+			{
+				begin: "\\b(mod|open)\\b"
+				beginCaptures:
+					"1":
+						name: "keyword.control.module.juvix"
+				end: "\\b((?<name>[\\p{Lu}\\p{Lt}][\\p{Lu}\\p{Lt}\\p{Ll}\\p{Lo}\\p{Lm}\\d'\\-]*)(?:[.]\\g<name>)*)\\b"
+				endCaptures:
+					"1":
+						name: "variable.other.module.juvix"
+			}
+		]
+	commentblock:
+		patterns: [
+			{
+				name: "comment.block.juvix"
+				begin: "\\{\\-"
+				beginCaptures:
+					"0":
+						name: "punctuation.definition.comment.begin.juvix"
+				end: "\\-\\}"
+				endCaptures:
+					"0":
+						name: "punctuation.definition.comment.end.juvix"
+				patterns: [
+					{
+						include: "#commentblock"
+					}
+				]
+			}
+		]
+	comments:
+		patterns: [
+			{
+				name: "comment.line.juvix"
+				match: "--.*"
+			}
+			{
+				include: "#commentblock"
+			}
+		]
+	strings:
+		patterns: [
+			{
+				begin: "\""
+				beginCaptures:
+					"0":
+						name: "punctuation.definition.string.begin.juvix"
+				end: "\""
+				endCaptures:
+					"0":
+						name: "punctuation.definition.string.end.juvix"
+				name: "string.quoted.double.juvix"
+				patterns: [
+					{
+						include: "#string_escapes"
+					}
+				]
+			}
+			{
+				begin: "'"
+				beginCaptures:
+					"0":
+						name: "punctuation.definition.char.begin.juvix"
+				end: "'"
+				endCaptures:
+					"0":
+						name: "punctuation.definition.char.end.juvix"
+				name: "string.quoted.single.juvix"
+				patterns: [
+					{
+						include: "#string_escapes"
+					}
+					{
+						match: ".{2,}"
+						name: "invalid.illegal.string.juvix"
+					}
+				]
+			}
+			{
+				begin: "`"
+				beginCaptures:
+					"0":
+						name: "punctuation.definition.operator.begin.juvix"
+				end: "`"
+				endCaptures:
+					"0":
+						name: "punctuation.definition.operator.end.juvix"
+			}
+		]
+	string_escapes:
+		patterns: [
+			{
+				match: "\\\\u(?![A-Fa-f0-9]{4}|{[A-Fa-f0-9]+})[^'\"]*"
+				name: "invalid.illegal.unicode-escape.juvix"
+			}
+			{
+				match: "\\\\u(?:[A-Fa-f0-9]{4}|({)([A-Fa-f0-9]+)(}))"
+				name: "constant.character.escape.juvix"
+				captures:
+					"1":
+						name: "punctuation.definition.unicode-escape.begin.bracket.curly.juvix"
+					"2":
+						patterns: [
+							{
+								match: "[A-Fa-f\\d]{7,}|(?!10)[A-Fa-f\\d]{6}"
+								name: "invalid.illegal.unicode-escape.juvix"
+							}
+						]
+					"3":
+						name: "punctuation.definition.unicode-escape.end.bracket.curly.juvix"
+			}
+			{
+				match: "\\\\(x[0-9A-Fa-f]{2}|[0-2][0-7]{0,2}|3[0-6][0-7]?|37[0-7]?|[4-7][0-7]?|.)"
+				name: "constant.character.escape.juvix"
+			}
+		]

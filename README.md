@@ -1,3 +1,3 @@
 # Juvix language package
 
-A short description of your language package.
+Syntax highlighting package for the (Juvix)[https://juvix.org/] programming language.
